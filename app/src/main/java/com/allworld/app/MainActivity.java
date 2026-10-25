@@ -68,7 +68,7 @@ public final class MainActivity extends Activity {
         panel.setGravity(Gravity.CENTER);
         panel.setOrientation(LinearLayout.VERTICAL);
         panel.setPadding(28, 28, 28, 28);
-        panel.setBackgroundColor(Color.rgb(3, 5, 22));
+        panel.setBackgroundResource(R.drawable.all_world_splash_background);
 
         TextView earth = new TextView(this);
         earth.setText("🌍");
