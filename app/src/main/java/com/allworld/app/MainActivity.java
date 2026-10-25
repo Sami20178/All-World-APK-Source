@@ -154,17 +154,19 @@ public final class MainActivity extends Activity {
         private static final int DOT_COUNT = 12;
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final ValueAnimator animator;
-        private int frame;
+        private float frame;
 
         LoadingDotsView(Activity activity) {
             super(activity);
             paint.setStyle(Paint.Style.FILL);
-            animator = ValueAnimator.ofInt(0, DOT_COUNT - 1);
-            animator.setDuration(840);
+            // A fractional frame makes the leading point travel smoothly
+            // between dots instead of jumping from one PNG/frame to another.
+            animator = ValueAnimator.ofFloat(0f, DOT_COUNT);
+            animator.setDuration(900);
             animator.setRepeatCount(ValueAnimator.INFINITE);
             animator.setInterpolator(new android.view.animation.LinearInterpolator());
             animator.addUpdateListener(valueAnimator -> {
-                frame = (Integer) valueAnimator.getAnimatedValue();
+                frame = (Float) valueAnimator.getAnimatedValue();
                 invalidate();
             });
         }
@@ -189,15 +191,20 @@ public final class MainActivity extends Activity {
             float radius = Math.min(getWidth(), getHeight()) * 0.37f;
             float dotRadius = Math.max(dp(1.8f), Math.min(getWidth(), getHeight()) * 0.055f);
 
-            // A bright dot travels around the ring; trailing dots fade smoothly.
+            // Twelve native dots form a ring. The bright point moves continuously
+            // from dot to dot; the following points fade like a video-loading spinner.
             for (int i = 0; i < DOT_COUNT; i++) {
-                int distance = (i - frame + DOT_COUNT) % DOT_COUNT;
-                int alpha = Math.max(35, 255 - distance * 19);
+                float behind = (frame - i + DOT_COUNT) % DOT_COUNT;
+                if (behind < 0f) behind += DOT_COUNT;
+                if (behind > DOT_COUNT / 2f) behind = DOT_COUNT - behind;
+                float strength = Math.max(0f, 1f - behind / 5.5f);
+                int alpha = 35 + Math.round(220f * strength);
+                float size = dotRadius * (0.72f + 0.28f * strength);
                 double angle = (Math.PI * 2.0 * i / DOT_COUNT) - Math.PI / 2.0;
                 float x = cx + (float) Math.cos(angle) * radius;
                 float y = cy + (float) Math.sin(angle) * radius;
                 paint.setColor(Color.argb(alpha, 105, 190, 255));
-                canvas.drawCircle(x, y, dotRadius, paint);
+                canvas.drawCircle(x, y, size, paint);
             }
         }
 
