@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android draws this window background before MainActivity.onCreate runs. -->
+    <style name="AppTheme" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@drawable/all_world_splash_background</item>
+        <item name="android:colorAccent">#69BEFF</item>
+        <item name="android:statusBarColor">#030516</item>
+        <item name="android:navigationBarColor">#030516</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+</resources>
